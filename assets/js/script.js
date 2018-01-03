@@ -1,65 +1,90 @@
-(function($) {
-  $.fn.duplicate = function() {
-    return this.each(function() {
+(function ($) {
+  var container;
+  $.fn.duplicate = function () {
+    return this.each(function () {
       var fieldname = 'duplicate';
-      field = $(this);
-      btn = $('.btn-duplicate');
       container = $('.message-duplicate');
-      input = $('.input-duplicate');
+      var input = $('.input-duplicate');
 
-
-      btn.click(function(e) {
+      $('.btn-duplicate').click(function (e) {
         container.hide().removeClass("success error");
-        input.toggleClass('active');
+        $('.hide-duplicate').toggleClass('active');
+
+        // set title with current title (input field)
+        $("#form-field-duplicate-title").val($('#form-field-title').val());
       });
 
-      input.keypress(function(e) {
-        if (e.which == 13) {
-          if($(this).val() == "") {
-            container.show().html('The field cannot be empty. Please enter a page title.').addClass('error').append('<i class="icon fa fa-close"></i>')
-            return false;
-          }
-          $.fn.ajax(fieldname);
-          return false;
-        }
+      $("#form-field-duplicate-submit").click(function (e) {
+        e.preventDefault();
+        $.fn.ajax(fieldname);
+        return false;
       });
 
-      container.on('click', '.fa-close', function(e){
+      container.on('click', '.fa-close', function (e) {
         $(this).parent().hide().removeClass("success error");
       });
-
     });
-
-
   };
 
   // Ajax function
-  $.fn.ajax = function(fieldname) {
-    var newID = $('[data-field="' + fieldname + '"]').find('.input-duplicate').val();
-    newID = newID.replace(/[\/\\\)\($%^&*<>"'`´:;.\?=]/g, " ");
+  $.fn.ajax = function (fieldname) {
+    // Titel
+    var newTitle = $('[data-field="' + fieldname + '"]').find('#form-field-duplicate-title').val();
+    newTitle = newTitle.replace(/[\/\\]/g, " ");
+
+    // Url
+    var newID = $('[data-field="' + fieldname + '"]').find('#form-field-duplicate-uid').val();
+    newID = newID.replace(/[\/\\]/g, " ");
+
     blueprintKey = $('[data-field="' + fieldname + '"]').find('button').data('fieldname');
     base_url = window.location.href.replace(/(\/edit.*)/g, '/field') + '/' + blueprintKey + '/' + fieldname + '/ajax/';
+
+    var ajaxUrl = base_url + (urlencode(newTitle) || 0) + '/' + (urlencode(newID) || 0);
+    console.log('aja');
+    console.log(ajaxUrl);
+
     $.ajax({
-      url: base_url + encodeURIComponent(newID),
+      url: ajaxUrl,
       type: 'GET',
-      success: function(response) {
+      success: function (response) {
         var r = JSON.parse(response);
 
-        if(r.class == 'error') {
+        if (r.class == 'error') {
           container.show().html(r.message).addClass(r.class).append('<i class="icon fa fa-close"></i>');
           input.removeClass('active');
         }
 
-        if(r.class == 'success' && r.uri) {
-          container.show().html(r.message).addClass(r.class);
-          new_url = window.location.href.replace(/(pages\/.*\/edit.*)/g, 'pages/' + r.uri + '/edit/');
-          container.append('You will be redirected to the new page ...')
-          setTimeout(function () {
-            window.location.replace(new_url);
-          }, 2500);
+        if (r.class === 'success' && r.uri) {
+          container
+            .show()
+            .html($('#form-field-duplicate-redirectmessage').val())
+            .addClass(r.class);
 
+          var newUrl = window.location.href.replace(/(pages\/.*\/edit.*)/g, 'pages/' + r.uri + '/edit');
+
+          setTimeout(function () {
+            window.location.replace(newUrl);
+          }, 2500);
         }
       }
     });
   };
+
+  /**
+   * @url https://stackoverflow.com/questions/332872/encode-url-in-javascript
+   * @param str
+   * @returns {string}
+   */
+  function urlencode(str) {
+    str = (str + '').toString();
+
+    return encodeURIComponent(str)
+      .replace(/!/g, '%21')
+      .replace(/'/g, '%27')
+      .replace(/\(/g, '%28')
+      .replace(/\)/g, '%29')
+      .replace(/\*/g, '%2A')
+      ;
+  }
 })(jQuery);
+

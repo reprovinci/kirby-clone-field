@@ -4,6 +4,12 @@ This custom Kirby field allows you to clone a page in the panel.
 
 ## Installation
 
+### Composer
+
+* `composer require reprovinci/kirby.field.duplicate`
+
+### Manual
+
 Put the field into `/site/fields`; create the folder if it does not exist yet.
 
 Your structure should then look like this:
@@ -22,8 +28,9 @@ site/
 fields:
   clone:
     type: duplicate
-    placeholder: Enter a page title and press Enter …
     buttontext: Clone page
+    buttontextsubmit: Clone
+    redirectmessage: The page was successfully created. You will be redirected to the new page...
 ```
 
 It's probably best to put this field before any other fields at the top of the form (or at the bottom).
@@ -34,8 +41,8 @@ This will create a button in your Panel form.
 
 ## Usage
 
-1. Click on the "Clone Page" button => an input field is shown.
-2. Enter the title of the new page into the input field and press `ENTER`.
+1. Click on the "Clone Page" button => multiple input fields are shown.
+2. Enter the title and the slug of the new page into the input fields and press `ENTER` or press the submit button.
 3. If all is well and the page does not exist yet, the new page is created, all files are copied to the new location and you are redirected to the new page.
 
 ## Limitations

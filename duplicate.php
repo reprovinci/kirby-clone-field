@@ -28,6 +28,8 @@ class DuplicateField extends BaseField {
                 'page' => $this->page(),
                 'placeholder'  => $this->i18n($this->placeholder()),
                 'buttontext' => $this->i18n($this->buttontext()),
+                'buttontextsubmit' => $this->i18n($this->buttontextsubmit()),
+                'redirectmessage' => $this->i18n($this->redirectmessage()),
             ));
             return $html;
         } else {
@@ -108,22 +110,29 @@ class DuplicateField extends BaseField {
     }
 
     // Routes
-    public function routes() {
+    public function routes()
+    {
         return array(
             array(
-                'pattern' => 'ajax/(:any)',
-                'method'  => 'GET',
-                'action' => function($newID) {
-
+                'pattern' => 'ajax/(:any)/(:any)',
+                'method' => 'GET',
+                'action' => function ($newTitle, $newID) {
                     $site = kirby()->site();
                     $page = $this->page();
+
+
 
                     // fetch all files
                     $files = $this->getfiles();
 
                     // get page data
                     $data = $this->getData();
-                    $data['title'] = urldecode($newID);
+                    $data['title'] =
+                        !empty($newTitle) ?
+                            urldecode($newTitle) :
+                            urldecode($newID)
+                    ;
+
 
 
                     // try to create the new page
@@ -131,11 +140,11 @@ class DuplicateField extends BaseField {
 
                         $new = str::slug(urldecode($newID));
                         if ($page->siblings()->find($new)) {
-                            $new = $new . '_' . time();
+                            $new = $new.'_'.time();
                         }
                         $newPage = $page->siblings()->create($new, $page->intendedTemplate(), $data);
 
-                        if($site->multilang()) {
+                        if ($site->multilang()) {
                             $this->updatePage($newPage, $newID);
                         }
 
@@ -148,28 +157,25 @@ class DuplicateField extends BaseField {
                         // trigger panel.page.create event
                         kirby()->trigger('panel.page.create', $newPage);
 
-                        $response = array(
+                        $response = [
                             'message' => 'The page was successfully created. ',
                             'class' => 'success',
-                            'uri' => $newPage->uri()
-                        );
+                            'uri' => $newPage->uri(),
+                        ];
 
                         return json_encode($response);
 
 
-                    } catch(Exception $e) {
-
-                        $response = array(
+                    } catch (Exception $e) {
+                        $response = [
                             'message' => $e->getMessage(),
-                            'class' => 'error'
-                        );
+                            'class' => 'error',
+                        ];
 
                         return json_encode($response);
-
                     }
                 }
             )
         );
-
     }
 }
