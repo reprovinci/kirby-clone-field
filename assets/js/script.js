@@ -2,15 +2,15 @@
   $.fn.duplicate = function() {
     return this.each(function() {
       var fieldname = 'duplicate';
-          field = $(this);
-          btn = $('.btn-duplicate');
-          container = $('.message-duplicate');
-          input = $('.input-duplicate');
+      field = $(this);
+      btn = $('.btn-duplicate');
+      container = $('.message-duplicate');
+      input = $('.input-duplicate');
 
 
       btn.click(function(e) {
         container.hide().removeClass("success error");
-        input.val('').toggleClass('active');
+        input.toggleClass('active');
       });
 
       input.keypress(function(e) {
@@ -36,9 +36,9 @@
   // Ajax function
   $.fn.ajax = function(fieldname) {
     var newID = $('[data-field="' + fieldname + '"]').find('.input-duplicate').val();
-        newID = newID.replace(/[\/\\\)\($%^&*<>"'`´:;.\?=]/g, " ");
-        blueprintKey = $('[data-field="' + fieldname + '"]').find('button').data('fieldname');
-        base_url = window.location.href.replace(/(\/edit.*)/g, '/field') + '/' + blueprintKey + '/' + fieldname + '/ajax/';
+    newID = newID.replace(/[\/\\\)\($%^&*<>"'`´:;.\?=]/g, " ");
+    blueprintKey = $('[data-field="' + fieldname + '"]').find('button').data('fieldname');
+    base_url = window.location.href.replace(/(\/edit.*)/g, '/field') + '/' + blueprintKey + '/' + fieldname + '/ajax/';
     $.ajax({
       url: base_url + encodeURIComponent(newID),
       type: 'GET',
@@ -55,7 +55,7 @@
           new_url = window.location.href.replace(/(pages\/.*\/edit.*)/g, 'pages/' + r.uri + '/edit/');
           container.append('You will be redirected to the new page ...')
           setTimeout(function () {
-              window.location.replace(new_url);
+            window.location.replace(new_url);
           }, 2500);
 
         }
