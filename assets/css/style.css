@@ -5,6 +5,10 @@
   vertical-align: middle;
   text-align: left;
 }
+.btn-duplicate-submit{
+    margin-top: 1em;
+}
+
 .btn-duplicate i.icon.fa.fa-clone {
   margin-right: 10px;
 }
@@ -14,8 +18,12 @@
   width: calc(100% - 126px);
   vertical-align: middle;
 }
-.input-duplicate.active {
-  display: inline-block;
+
+.hide-duplicate{
+  display: none;
+}
+.hide-duplicate.active{
+  display: block;
 }
 
 .message-duplicate {
