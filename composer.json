@@ -1,0 +1,26 @@
+{
+  "name": "reprovinci/kirby.field.clone-page",
+  "type": "kirby-field",
+  "description": "This custom Kirby field allows you to clone a page in the panel.",
+  "require": {
+    "composer/installers": "^1.3"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ahmet Bora",
+      "email": "byybora@gmail.com"
+    },
+    {
+      "name": "Matthijs Brouwer",
+      "email": "matthijs@reprovinci.nl"
+    },
+    {
+      "name": "Elwin Dokter",
+      "email": "elwin@reprovinci.nl"
+    }
+  ],
+  "extra": {
+    "installer-name": "kirby-clone-field"
+  }
+}
